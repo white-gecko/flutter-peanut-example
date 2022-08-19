@@ -24,8 +24,7 @@ jobs:
 
       - name: Install flutter pubs
         run: |
-          flutter create my_app
-          cd my_app
+          flutter create .
           flutter pub get
           flutter pub global activate peanut
 
