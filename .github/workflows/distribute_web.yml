@@ -1,0 +1,38 @@
+name: Distribute Web App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically.
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.5'
+          channel: "stable"
+
+      - run: echo $FLUTTER_ROOT
+
+      - name: Install flutter pubs
+        run: |
+          flutter create my_app
+          cd my_app
+          flutter pub get
+          flutter pub global activate peanut
+
+      - name: Peanut Web Build and Push
+        run: |
+          git fetch origin gh-pages
+          git config --global user.email "bot@example.org"
+          git config --global user.name "Bot"
+          flutter pub global run peanut
+          git push origin --set-upstream gh-pages
